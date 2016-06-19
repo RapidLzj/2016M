@@ -13,7 +13,15 @@ import os, time
 
 
 def rm_biasflat (raw_path, sci_path, bare_fits, flat_file, bias_file, debug=0) :
-    "Correct data fits with bias and flat"
+    """Correct data fits with bias and flat
+    :param raw_path: path of raw fits file
+    :param sci_path: path of output science path
+    :param bare_fits: fits file without path and extention
+    :param flat_file: flat fits filename, full name with path and ext
+    :param bias_file: bias fits filename, full name
+    :param debug: debug level
+    :returns: 0 if ok, other for error
+    """
 
     nx, ny = 2048, 2016
     namp = 16

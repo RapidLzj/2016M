@@ -9,7 +9,12 @@ import os
 
 
 def list_expand ( alist , basedir='', debug=0 ):
-    'if list is a list file, expand it. remove all comments and empty lines'
+    """Expand list if given a filename. remove all comments and empty lines
+    alist   : list or filename
+    basedir : optional, if given, add to filename
+    debug   : debug info level, default 0
+    :returns: list of filenames
+    """
     if isinstance(alist, str) :
         if debug >= 9 :
             print ('Expand list file %s' % alist)
@@ -29,7 +34,12 @@ def list_expand ( alist , basedir='', debug=0 ):
 
 
 def is_list_exists ( alist, basedir='', debug=0 ) :
-    'Check all file in list exists'
+    """Check all file in list exists
+    alist   : list of files to check, will be expanded
+    basedir : optional, add to head of filename
+    debug   : debug level, default 0
+    :returns: true if all files exists, false else
+    """
 
     (files, n_file) = list_expand(alist, basedir)
 

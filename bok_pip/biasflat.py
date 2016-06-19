@@ -11,8 +11,14 @@ from util import *
 import os, time
 
 
-def merge_bias ( bias_list, out_bias_file , basedir='', debug=0 ) :
-    'Merge bias by median value'
+def merge_bias(bias_list, out_bias_file , basedir='', debug=0):
+    """Merge bias with median values
+    :param bias_list: bias file list or list file
+    :param out_bias_file: output filename
+    :param basedir: path added to files in list
+    :param debug: debug level
+    :returns: 1 if ok, 0 or -1 for error
+    """
 
     (files, n_file) = list_expand(bias_list, basedir=basedir, debug=debug)
     if not is_list_exists(files, debug=debug) :
@@ -50,7 +56,14 @@ def merge_bias ( bias_list, out_bias_file , basedir='', debug=0 ) :
 
 
 def merge_flat ( flat_list, bias_file, out_flat_file, basedir='', debug=0 ) :
-    'Merge flat by normalized median value'
+    """Merge flat with normalized median values
+    :param flat_list: flat file list or list file
+    :param bias_file: bias fits file
+    :param out_flat_file: output filename
+    :param basedir: path added to files in list
+    :param debug: debug level
+    :returns: 1 if ok, 0 or -1 for error
+    """
 
     (files, n_file) = list_expand(flat_list, basedir=basedir, debug=debug)
     if not is_list_exists(files, debug=debug):
@@ -93,4 +106,3 @@ def merge_flat ( flat_list, bias_file, out_flat_file, basedir='', debug=0 ) :
 
     print (u'Save flat to {0:s}'.format(out_flat_file))
     new_hdulist.writeto(out_flat_file)
-
