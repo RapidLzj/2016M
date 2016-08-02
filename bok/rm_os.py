@@ -5,14 +5,17 @@
 """
 
 import numpy as np
+from common.util import *
 
 
 def rm_os ( dat, no_fit = True, debug=0 ) :
-    """Remove overscan from data, using only one side overscan
-    :param dat: original data from fits, data and overscan
-    :param no_fit: if true, do polygon fit for overscan
-    :param debug: debug level
-    :returns: data minus overscan
+    """ Remove overscan from data, using only one side overscan
+    argument:
+        dat: original data from fits, data and overscan
+        no_fit: if true, do polygon fit for overscan
+        debug: debug level
+    returns:
+        data minus overscan
     """
 
     nx, ny, nyo = 2048, 2016, 2036

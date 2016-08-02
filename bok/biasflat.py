@@ -7,20 +7,22 @@
 import numpy as np
 from astropy.io import fits
 from rm_os import rm_os
-from util import *
+from common.util import *
 import os, time
 
 
 def merge_bias(bias_list, out_bias_file , basedir='', debug=0):
-    """Merge bias with median values
-    :param bias_list: bias file list or list file
-    :param out_bias_file: output filename
-    :param basedir: path added to files in list
-    :param debug: debug level
-    :returns: 1 if ok, 0 or -1 for error
+    """ Merge bias with median values
+    args:
+        bias_list: bias file list or list file
+        out_bias_file: output filename
+        basedir: path added to files in list
+        debug: debug level
+    returns:
+        1 if ok, 0 or -1 for error
     """
 
-    (files, n_file) = list_expand(bias_list, basedir=basedir, debug=debug)
+    (files, n_file) = common.list_expand(bias_list, basedir=basedir, debug=debug)
     if not is_list_exists(files, debug=debug) :
         raise IOError('Not all files in list exist')
 

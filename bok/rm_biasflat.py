@@ -8,19 +8,21 @@
 import numpy as np
 from astropy.io import fits
 from rm_os import rm_os
-from util import *
+from common.util import *
 import os, time
 
 
 def rm_biasflat (raw_path, sci_path, bare_fits, flat_file, bias_file, debug=0) :
-    """Correct data fits with bias and flat
-    :param raw_path: path of raw fits file
-    :param sci_path: path of output science path
-    :param bare_fits: fits file without path and extention
-    :param flat_file: flat fits filename, full name with path and ext
-    :param bias_file: bias fits filename, full name
-    :param debug: debug level
-    :returns: 0 if ok, other for error
+    """ Correct data fits with bias and flat
+    argument:
+        raw_path: path of raw fits file
+        sci_path: path of output science path
+        bare_fits: fits file without path and extention
+        flat_file: flat fits filename, full name with path and ext
+        bias_file: bias fits filename, full name
+        debug: debug level
+    returns:
+        0 if ok, other for error
     """
 
     nx, ny = 2048, 2016
