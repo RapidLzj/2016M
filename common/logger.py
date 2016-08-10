@@ -38,13 +38,15 @@ class logger (object) :
 
     def close(self) :
         """ Close logger """
-        # log finish time
-        t_now = time.time()
-        t_str = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(t_now))
-        t_span = t_now - self._start
-        self.write("{t} ===== {task} FINISH <<<<< {s:.1f} sec".format(task=self._task, t=t_str, s=t_span), -1)
-        # close file
-        if self._file is not None : self._f.close()
+        if self._f is not None :
+            # log finish time
+            t_now = time.time()
+            t_str = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(t_now))
+            t_span = t_now - self._start
+            self.write("{t} ===== {task} FINISH <<<<< {s:.1f} sec".format(task=self._task, t=t_str, s=t_span), -1)
+            # close file
+            self._f.close()
+            self._f = None
 
     def timespan(self) :
         """ Get time span from start, in seconds"""
@@ -62,7 +64,7 @@ class logger (object) :
         t = time.strftime("%H:%M:%S | ", time.gmtime()) if show_time else ""
         if type(msg) == str : msg = [msg]
         for m in msg :
-            if self._file is not None : self._f.write(t + m + "\n")
+            if self._f is not None : self._f.write(t + m + "\n")
             if level <= self._debug : print (m)
 
 

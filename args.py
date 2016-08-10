@@ -10,7 +10,7 @@
 """
 
 
-def arg_trans (argv, default=None, restrict=True):
+def arg_trans (argv, default=None, restrict=True, silent=False):
     """ A function reduce commandline arguments.
         Recognize them into two categories: arguments by order and by name.
         Directly arguments will be taken as ordered arguments, will be entitled as ARG01, ARG02, etc.
@@ -22,6 +22,7 @@ def arg_trans (argv, default=None, restrict=True):
         argv: argument values from `sys.argv`
         default: providing default key-value dict
         restrict: bool, restrict names in default or not. If default is None, this will not effect.
+        silent: display error message or not
     returns:
         dict of these arguments
     """
@@ -41,14 +42,15 @@ def arg_trans (argv, default=None, restrict=True):
         else :
             k = kv[0]
             v = kv[1]
+            if v == "" : v = True
         if not restrict or k in res :
             res[k] = v
         else :
-            print ("Argument `{}` NOT recognized.".format(k))
+            if not silent : print ("Argument `{}` NOT recognized.".format(k))
 
     for k in res :
         if res[k] is None :
-            print ("Argument `{}` required but missing.".format(k))
+            if not silent : print ("Argument `{}` required but missing.".format(k))
 
     return res
 

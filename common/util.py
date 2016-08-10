@@ -10,7 +10,7 @@ import os
 import time
 
 
-def list_expand (alist , basedir=''):
+def list_expand (alist , basedir='', log=None):
     """ Expand list if given a filename. remove all comments and empty lines
     args:
         alist   : list or filename
@@ -19,12 +19,8 @@ def list_expand (alist , basedir=''):
     returns:
         list of filenames
     """
-    global debug
-    if "debug" not in globals():
-        debug = 0
     if isinstance(alist, str) :
-        if debug >= 9 :
-            print ("Expand list file `{}`".format(alist))
+        log.write("Expand list file `{}`".format(alist), 9)
         if os.path.isfile(alist) :
             with open(alist, "r") as fp :
                 xlist = fp.readlines()
@@ -40,7 +36,7 @@ def list_expand (alist , basedir=''):
     return (fs, nf)
 
 
-def is_list_exists (alist, basedir="") :
+def is_list_exists (alist, basedir="", log=None) :
     """ Check all file in list exists
     args:
         alist   : list of files to check, will be expanded
@@ -49,17 +45,33 @@ def is_list_exists (alist, basedir="") :
     returns:
         true if all files exists, false else
     """
-    global debug
-    if "debug" not in globals():
-        debug = 0
     (files, n_file) = list_expand(alist, basedir)
 
     check = [os.path.isfile(afile) for afile in files]
-    if debug >= 9 :
-        for i in range(n_file):
-            print ('%5s %s' % (check[i], files[i]))
+    for i in range(n_file):
+        log.write("{:5} {}".format(check[i], files[i]), 9)
 
     return all(check)
+
+
+def overwrite_check (overwrite, files, log=None) :
+    """ Check existance of output files, and the overwrite flag
+    args:
+        overwrite: bool, overwrite or not
+        files: full name of output files to check
+        log: logger
+    returns:
+        True if OK, not exists, or have overwrite flag. False if any file exists and overwrite is not set.
+    """
+    res = True
+    for f in files :
+        if os.path.isfile(f) :
+            if overwrite :
+                log.write("<{}> exists, and will be overwrited".format(f), 1)
+            else :
+                log.write("<{}> exists.".format(f), -1)
+                res = False
+    return res
 
 
 def read_file (filename, default=None) :

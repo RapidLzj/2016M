@@ -14,13 +14,14 @@ from common import *
 from constant import const
 
 
-def merge_bias(bias_list, out_bias_file, basedir=""):
+def merge_bias(bias_list, out_bias_file, basedir="", overwrite=False):
     """ Merge bias with median values
     args:
         bias_list: bias file list or list file
         out_bias_file: output filename
         basedir: path added to files in list
         debug: debug level
+        overwrite: if target exists, overwrite or not
     returns:
         1 if ok, 0 or -1 for error
     """
@@ -30,9 +31,13 @@ def merge_bias(bias_list, out_bias_file, basedir=""):
         debug = 0
     log = logger(out_bias_file[0:-4]+'log', "MergeBias", debug)
 
-    (files, n_file) = list_expand(bias_list, basedir=basedir)
-    if not is_list_exists(files) :
-        raise IOError("NOT all files in list exist.")
+    (files, n_file) = list_expand(bias_list, basedir=basedir, log=log)
+    if not is_list_exists(files, log=log) :
+        raise IOError("NOT all files in list exist. Abort!")
+
+    if not overwrite_check(overwrite, [out_bias_file], log=log) :
+        log.write("Abort!", -1)
+        return -1
 
     data_cube = np.empty([n_file, const.n_amp, const.amp_ny, const.amp_nx], dtype=np.float32)
 
@@ -41,7 +46,7 @@ def merge_bias(bias_list, out_bias_file, basedir=""):
         log.write("#{:>3d}/{:<3d} Loading: {:s}".format(f + 1, n_file, files[f]))
         hdulist = fits.open(files[f])
         for a in range(const.n_amp) :
-            data_cube[f, a] = rm_os(hdulist[a + 1].data)
+            data_cube[f, a] = rm_os(hdulist[a + 1].data, log)
         hdulist.close()
 
     # get median
@@ -61,18 +66,19 @@ def merge_bias(bias_list, out_bias_file, basedir=""):
         new_hdulist.append(img_hdu)
 
     log.write('Save bias to `{}`'.format(out_bias_file))
-    new_hdulist.writeto(out_bias_file)
+    new_hdulist.writeto(out_bias_file, clobber=overwrite)
 
     log.close()
 
 
-def merge_flat ( flat_list, bias_file, out_flat_file, basedir="" ) :
+def merge_flat ( flat_list, bias_file, out_flat_file, basedir="", overwrite=False) :
     """ Merge flat with normalized median values
     argument:
         flat_list: flat file list or list file
         bias_file: bias fits file
         out_flat_file: output filename
         basedir: path added to files in list
+        overwrite: overwrite if exists
     returns:
         1 if ok, 0 or -1 for error
     """
@@ -82,11 +88,15 @@ def merge_flat ( flat_list, bias_file, out_flat_file, basedir="" ) :
         debug = 0
     log = logger(out_flat_file[0 :-4] + 'log', "MergeFlat", debug)
 
-    (files, n_file) = list_expand(flat_list, basedir=basedir)
-    if not is_list_exists(files):
+    (files, n_file) = list_expand(flat_list, basedir=basedir, log=log)
+    if not is_list_exists(files, log=log):
         raise IOError("NOT all files in list exist")
     if not os.path.isfile(bias_file) :
         raise IOError("bias file NOT EXIST")
+
+    if not overwrite_check(overwrite, [out_flat_file], log=log) :
+        log.write("Abort!", -1)
+        return -1
 
     data_cube = np.empty([n_file, const.n_amp, const.amp_ny, const.amp_nx], dtype=np.float32)
 
@@ -98,7 +108,7 @@ def merge_flat ( flat_list, bias_file, out_flat_file, basedir="" ) :
         hdulist = fits.open(files[f])
         for a in range(const.n_amp) :
             # remove overscan and bias
-            data_one = rm_os(hdulist[a + 1].data) - biashdu[a + 1].data
+            data_one = rm_os(hdulist[a + 1].data, log) - biashdu[a + 1].data
             # normalize
             data_med = np.median(data_one)
             data_cube[f, a] = data_one / data_med
