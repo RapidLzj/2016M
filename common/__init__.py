@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
     This is version 2016M of pipeline for sage sky survey.
     Rewrite using python, original version using IDL
@@ -8,5 +10,12 @@
     Location: Steward Observatory, University of Arizona, Tucson, AZ
 """
 
-from util import *
 
+from util import *
+from progress_bar import *
+from logger import *
+from msg_box import *
+from info import *
+import angle
+import sky
+import cata

@@ -1,27 +1,36 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
     2016-06-18, 2016M-1.0 lzj
-    Call SExrtactor to do extract source from seperated fits,
-    and merge frame result
+    Generate process report
     For bok
 
 """
 
-import math
-from astropy.io import fits
 import numpy as np
-import time
-from common.util import *
+from astropy.io import fits
+from rm_os import rm_os
+from common import *
+from constant import const
 
 
-def report(sci_path, bare_fits, flags, debug=0):
+def report(red_path, bare_fits, flags,
+           ver_from=None):
     """ Reduction result report.
     argument:
-        sci_path: path of output science path
-        bare_fits: fits file without path and extention
-        flags: flag tuple of necessory steps
-        debug: debug level
+        red_path: path of output science path
+        bare_fits: fits file without path and extension
+        flags: flag tuple of necessary steps
     returns:
-        n_mag for ok, 0 or -1 for error
+        None or 0
     """
+    # process global debug level
+    global debug
+    if "debug" not in globals():
+        debug = 0
+    # Version prefix
+    ver_from_fix = "" if ver_from is None else "." + ver_from
+    ver_to_fix = ver_from_fix
+
 
     pass

@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
     2016-06-16, 2016M-1.0 lzj
     Remove overscan
@@ -5,31 +7,29 @@
 """
 
 import numpy as np
-from common.util import *
+from common import *
+from constant import const
 
 
-def rm_os ( dat, no_fit = True, debug=0 ) :
+def rm_os (dat, log, do_fit=True) :
     """ Remove overscan from data, using only one side overscan
     argument:
         dat: original data from fits, data and overscan
-        no_fit: if true, do polygon fit for overscan
-        debug: debug level
+        log: logger
+        do_fit: if true, do polygon fit for overscan
     returns:
         data minus overscan
     """
-
-    nx, ny, nyo = 2048, 2016, 2036
-
-    data = np.float32(dat[0:nx, 0:ny])
-    os = dat[0:nx, ny:nyo]
+    data = np.float32(dat[0:const.amp_ny, 0:const.amp_nx])
+    os = dat[0:const.amp_ny, const.amp_nx:const.amp_nx_os]
 
     os_med = np.median(os, axis=1)
 
-    if not no_fit :
+    if do_fit :
         pass
 
-    for l in range(nx) :
-        data[l, :] -= os_med[l]
+    for y in range(const.amp_ny) :
+        data[y, :] -= os_med[y]
 
     return data
 

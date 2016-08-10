@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
     This is version 2016M of pipeline for sage sky survey.
     Rewrite using python, original version using IDL
