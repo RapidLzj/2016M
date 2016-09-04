@@ -12,7 +12,7 @@ from common import *
 from .constant import const
 
 
-def rm_os (dat, log, do_fit=False, sigma_clip=True) :
+def rm_os (dat, log, do_fit=False, sigma_clip=False) :
     """ Remove overscan from data, using only one side overscan
     argument:
         dat: original data from fits, data and overscan
