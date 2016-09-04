@@ -9,18 +9,20 @@
 
 import numpy as np
 from astropy.io import fits
-from rm_os import rm_os
 from common import *
-from constant import const
+from .constant import const
 
 
 def report(red_path, bare_fits, flags,
-           ver_from=None):
+           ver_from=None, overwrite=False):
     """ Reduction result report.
     argument:
         red_path: path of output science path
         bare_fits: fits file without path and extension
         flags: flag tuple of necessary steps
+        ver_from: version which data come from
+        #ver_to: version which data write to
+        overwrite: is set, overwrite existing output files
     returns:
         None or 0
     """

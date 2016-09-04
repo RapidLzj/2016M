@@ -8,14 +8,13 @@
 
 import numpy as np
 from astropy.io import fits
-from rm_os import rm_os
 from common import *
-from constant import const
+from .constant import const
 
 
 def astromerey(red_path, bare_fits,
                wcs_catalog=None, match_distan=0.002, recenter=False,
-               ver_from=None, ver_to=None):
+               ver_from=None, ver_to=None, overwrite=False):
     """ Do astrometry, matching and regress with USNO-B1 catalog or SDSS/APASS
     argument:
         red_path: path of output science path
@@ -23,6 +22,9 @@ def astromerey(red_path, bare_fits,
         wcs_catalog: reference catalog of wcs
         match_distan: distance limit for matching, default 0.002 deg, 7.2 arcsec
         recenter: use grid method to find real center, default false
+        ver_from: version which data come from
+        ver_to: version which data write to
+        overwrite: is set, overwrite existing output files
     returns:
         n_wcs for stars count matched, 0 or -1 for error
     """

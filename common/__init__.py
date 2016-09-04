@@ -11,11 +11,14 @@
 """
 
 
-from util import *
-from progress_bar import *
-from logger import *
-from msg_box import *
-from info import *
-import angle
-import sky
-import cata
+# from import section, use common.xxx
+from .util import *
+from .progress_bar import progress_bar
+from .logger import logger
+from .msg_box import msg_box
+from .info import info
+from .common_const import com_const
+# import section, use common.xxx.xxx
+import common.angle
+import common.sky
+import common.cata

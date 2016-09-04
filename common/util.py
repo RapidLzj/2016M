@@ -10,52 +10,70 @@ import os
 import time
 
 
-def list_expand (alist , basedir='', log=None):
+def list_expand (alist, basedir='', log=None):
     """ Expand list if given a filename. remove all comments and empty lines
     args:
         alist   : list or filename
         basedir : optional, if given, add to filename
-        debug   : debug info level, default 0
+        log: logger object
     returns:
         list of filenames
     """
     if isinstance(alist, str) :
-        log.write("Expand list file `{}`".format(alist), 9)
+        if log is not None : log.write("Expand list file [{}]".format(alist), 9)
         if os.path.isfile(alist) :
             with open(alist, "r") as fp :
                 xlist = fp.readlines()
         else :
-            raise IOError("file `{}` NOT exists.".format(alist))
+            raise IOError("file [{}] NOT exists.".format(alist))
     else :
         xlist = alist
 
     fs = [basedir + line.strip() for line in xlist
-            if not line.strip().startswith("#") and line.strip() != ""]
+        if not line.strip().startswith("#") and line.strip() != ""]
 
     nf = len(fs)
     return (fs, nf)
 
 
 def is_list_exists (alist, basedir="", log=None) :
-    """ Check all file in list exists
+    """ Check existence of all file in list
     args:
-        alist   : list of files to check, will be expanded
-        basedir : optional, add to head of filename
-        debug   : debug level, default 0
+        alist: list of files to check, will be expanded
+        basedir: optional, add to head of filename
+        log: logger object
     returns:
         true if all files exists, false else
     """
     (files, n_file) = list_expand(alist, basedir)
 
-    check = [os.path.isfile(afile) for afile in files]
-    for i in range(n_file):
-        log.write("{:5} {}".format(check[i], files[i]), 9)
+    return file_exist(files, log)
 
-    return all(check)
+
+def file_exist (files, log=None) :
+    """ Check existence of input files
+    args:
+        files: string array/list/tuple of files to check
+        log: log object
+    returns:
+        True if all exist
+    """
+    res = True
+    for f in files :
+        if isinstance(f, str) :
+            if os.path.isfile(f) :
+                if log is not None : log.write(": {}".format(f), 9)
+            else :
+                if log is not None : log.write("X {}".format(f), -1)
+                res = False
+        else :
+            res = res and file_exist(f, log)
+
+    return res
 
 
 def overwrite_check (overwrite, files, log=None) :
-    """ Check existance of output files, and the overwrite flag
+    """ Check existence of output files, and the overwrite flag
     args:
         overwrite: bool, overwrite or not
         files: full name of output files to check
@@ -65,12 +83,15 @@ def overwrite_check (overwrite, files, log=None) :
     """
     res = True
     for f in files :
-        if os.path.isfile(f) :
-            if overwrite :
-                log.write("<{}> exists, and will be overwrited".format(f), 1)
-            else :
-                log.write("<{}> exists.".format(f), -1)
-                res = False
+        if isinstance(f, str) :
+            if os.path.isfile(f) :
+                if overwrite :
+                    if log is not None : log.write("[{}] exists, and will be overwritten.".format(f), 2)
+                else :
+                    if log is not None : log.write("[{}] exists.".format(f), -1)
+                    res = False
+        else :
+            res = res and overwrite_check(overwrite, f, log)
     return res
 
 
@@ -119,3 +140,28 @@ def sxpar (header, key, default=None) :
     else :
         v = default
     return v
+
+
+def read_conf (conffile, default=None) :
+    """ Read configure file, and remove comments, empty lines
+    args:
+        conffile: configure file name
+        default: default content if file not exists
+    returns:
+        a list of lines, leading and tailing space striped, empty line and comment removed
+    """
+    if os.path.isfile(conffile) :
+        lines = open(conffile,"r").readlines()
+    else :
+        if default is None :
+            lines = []
+        else :
+            lines = default
+
+    outlines = []
+    for l in lines :
+        k = l.split("#")[0].strip()
+        if k != "" :
+            outlines.append(k)
+
+    return outlines

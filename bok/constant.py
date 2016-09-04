@@ -24,8 +24,10 @@ class const (object) :
     # x/y start of each amp in whole image
     amp_xt = [1, 0, 1, 0, 3, 2, 3, 2, 0, 1, 0, 1, 2, 3, 2, 3]
     amp_yt = [1, 1, 0, 0, 1, 1, 0, 0, 2, 2, 3, 3, 2, 2, 3, 3]
-    amp_x0 = [amp_nx * t if t < 2 else amp_nx * t + gap_x for t in amp_xt]
-    amp_y0 = [amp_ny * t if t < 2 else amp_ny * t + gap_y for t in amp_yt]
+    #amp_x0 = [amp_nx * t if t < 2 else amp_nx * t + gap_x for t in amp_xt]
+    #amp_y0 = [amp_ny * t if t < 2 else amp_ny * t + gap_y for t in amp_yt]
+    amp_x0 = [2016, 0, 2016, 0, 6167, 4151, 6167, 4151, 0, 2016, 0, 2016, 4151, 6167, 4151, 6167]
+    amp_y0 = [2048, 2048, 0, 0, 2048, 2048, 0, 0, 4460, 4460, 6508, 6508, 4460, 4460, 6508, 6508]
 
     # whole image
     ctx, cty = 4091.04 - 1, 4277.99 - 1 # center
@@ -40,42 +42,3 @@ class const (object) :
     site_lat = 31 + 57 / 60.0 +  46.5 / 3600.0     # latitude
     site_ele = 2071.0                              # elevation
     site_tz  = -7                                  # timezone, MST
-
-    # record structure of catalog : [(name, type, unit, disp)]
-    cols = [("starno",    "J", "No",  "5d"),
-            ("mjd",       "I", "DAY", "04d"),
-            ("fileno",    "I", "NO",  "04d"),
-            ("filter",    "8A","",    "8s"),
-            ("x",         "E", "PIX", "10.5f"),
-            ("y",         "E", "PIX", "10.5f"),
-            ("elong",     "E", "",    "5.3f"),
-            ("fwhm",      "E", "PIX", "6.3f"),
-            ("mag_auto",  "E", "MAG", "6.3f"),
-            ("err_auto",  "E", "MAG", "6.4f"),
-            ("mag_best",  "E", "MAG", "6.3f"),
-            ("err_best",  "E", "MAG", "6.4f"),
-            ("mag_petro", "E", "MAG", "6.3f"),
-            ("err_petro", "E", "MAG", "6.4f"),
-            ("mag_aper1", "E", "MAG", "6.3f"),
-            ("err_aper1", "E", "MAG", "6.4f"),
-            ("mag_aper2", "E", "MAG", "6.3f"),
-            ("err_aper2", "E", "MAG", "6.4f"),
-            ("mag_aper3", "E", "MAG", "6.3f"),
-            ("err_aper3", "E", "MAG", "6.4f"),
-            ("mag_aper4", "E", "MAG", "6.3f"),
-            ("err_aper4", "E", "MAG", "6.4f"),
-            ("mag_aper5", "E", "MAG", "6.3f"),
-            ("err_aper5", "E", "MAG", "6.4f"),
-            ("flags",     "B", "",    "8b"),
-            ("mag_corr",  "E", "MAG", "6.3f"),
-            ("err_corr",  "E", "MAG", "6.4f"),
-            ("radeg",     "D", "DEG", "10.6f"),
-            ("decdeg",    "D", "DEG", "10.6f"),
-            ("raerr",     "E", "SEC", "5.2f"),
-            ("decerr",    "E", "SEC", "5.2f"),
-            ("rastr",     "11A","HMS","11s"),
-            ("decstr",    "11A","DMS","11s"),
-            ("ixwcs",     "J",  "NO", "5d"),
-            ("ixmag",     "J",  "NO", "5d"),
-            ("ampno",     "B",  "NO", "2d"),
-            ]

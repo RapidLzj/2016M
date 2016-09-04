@@ -9,13 +9,13 @@
 
 import numpy as np
 from astropy.io import fits
-from rm_os import rm_os
 from common import *
-from constant import const
+from .rm_os import rm_os
+from .constant import const
 
 
 def bfcorrect (raw_path, red_path, bare_fits, bias_file, flat_file,
-               ver_to=None) :
+               ver_to=None, overwrite=False) :
     """ Correct data fits with bias and flat
     argument:
         raw_path: path of raw fits file
@@ -23,6 +23,9 @@ def bfcorrect (raw_path, red_path, bare_fits, bias_file, flat_file,
         bare_fits: fits file without path and extension
         flat_file: flat fits filename, full name with path and ext
         bias_file: bias fits filename, full name
+        #ver_from: version which data come from
+        ver_to: version which data write to
+        overwrite: is set, overwrite existing output files
     returns:
         0 if ok, other for error
     """
@@ -46,26 +49,28 @@ def bfcorrect (raw_path, red_path, bare_fits, bias_file, flat_file,
     out_fits = [prefix_to + a + ".fits" for a in const.amp_str]
 
     # check file exists
-    if not os.path.isfile(bias_file):
-        raise IOError("Bias file `{}` NOT EXIST.".format(bias_file))
-    if not os.path.isfile(flat_file):
-        raise IOError("Flat file `{}` NOT EXIST.".format(flat_file))
-    if not os.path.isfile(raw_fits):
-        raise IOError("Raw data fits `{}` file NOT EXIST.".format(raw_fits))
+    if not file_exist([bias_file, flat_file, raw_fits], log) :
+        log.write("Files missing. About!", -1)
+        return -1
+    if not overwrite_check(overwrite, out_fits, log) :
+        log.write("Output file exists without overwrite flag. Abort!", -1)
+        return -1
 
+    # open and load data
     raw_hdu = fits.open(raw_fits)
     bias_hdu = fits.open(bias_file)
     flat_hdu = fits.open(flat_file)
 
     pri_hdu = fits.PrimaryHDU()
     for a in range(const.n_amp) :
-        data = (rm_os(raw_hdu[a + 1].data, log) - bias_hdu[a + 1].data) / flat_hdu[a + 1].data
+        data = np.float32((rm_os(raw_hdu[a + 1].data, log) - bias_hdu[a + 1].data) /
+                          flat_hdu[a + 1].data)
         pri_hdu.data = data
         pri_hdu.header = raw_hdu[a + 1].header
         pri_hdu.header.extent(raw_hdu[0].header.cards)
         pri_hdu.writeto(out_fits[a])
 
-    log.write("Bias and flat corrected for {}".format(bare_fits))
+    log.write("Bias and flat corrected for [{}]".format(bare_fits))
 
     log.close()
 

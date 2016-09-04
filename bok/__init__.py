@@ -10,10 +10,12 @@
     Location: Steward Observatory, University of Arizona, Tucson, AZ
 """
 
-from rm_os import *
-from biasflat import *
-from bfcorrect import *
-from photometry import *
-from astrometry import *
-from report import *
+
+from .rm_os import rm_os
+from .merge_bias import merge_bias
+from .merge_flat import merge_flat
+from .bfcorrect import bfcorrect
+from .photometry import photomerey
+from .astrometry import astromerey
+from .report import report
 

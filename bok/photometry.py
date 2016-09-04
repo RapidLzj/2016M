@@ -8,19 +8,18 @@
 """
 
 
-import os
 import numpy as np
 from astropy.io import fits
-from rm_os import rm_os
-from header_fix import header_fix
+import photutils
 from common import *
-from constant import const
+from .constant import const
+from .header_fix import header_fix
 
 
 def photomerey(raw_path, red_path, bare_fits,
                keep=True, sex_cmd="sextractor",
                aper_rad=None, do_psf=False,
-               ver_from=None, ver_to=None):
+               ver_from=None, ver_to=None, overwrite=False):
     """ Call SExrtactor to do extract source from separated fits, and merge
     argument:
         raw_path: path of raw fits file
@@ -28,6 +27,11 @@ def photomerey(raw_path, red_path, bare_fits,
         bare_fits: fits file without path and extension
         keep: keep bf corrected fits after sex, default false
         sex_cmd: sex command, different system may differ, default sextractor
+        aper_rad: aperture photon count radii array
+        do_psf: if set, do psf photometry
+        ver_from: version which data come from
+        ver_to: version which data write to
+        overwrite: is set, overwrite existing output files
     return:
         n_star if OK, -1 if error
     """
@@ -57,6 +61,13 @@ def photomerey(raw_path, red_path, bare_fits,
     photi_cat = prefix_to + "photi.cat"
     psf_def = prefix_to + "psf.def"
 
+    if not file_exist([in_fits, raw_fits], log) :
+        log.write("File missing. Abort!", -1)
+        return -1
+    if not overwrite_check(overwrite, [outs_ldac, phots_ldac, phots_cat, photi_ldac, photi_cat], log) :
+        log.write("Output files exist without overwrite flag. Abort!", -1)
+        return -1
+
     # load raw header and fix fields, extract some fields into object
     hdr, hinfo = header_fix(raw_fits)
 
@@ -71,14 +82,26 @@ def photomerey(raw_path, red_path, bare_fits,
 
     # process each piece
     for a in range(const.n_amp) :
+        # call sex, and load result, store in a super list
         cmd = "{sex} {fits} -c lzj.sex -CATALOG_NAME {ldac} -GAIN {gain:5.3f} -PIXEL_SCALE {ps:6.3f}".format(
             sex=sex_cmd, fits=in_fits[a], ldac=outs_ldac[a], gain=hinfo.gain[a], ps=const.pix_scales)
         os.system(cmd)
         cata = fits.getdata(outs_ldac[a], 2)
         cata_amp.append(cata)
         n_star_amp.append(len(cata))
+        # estimate mean fwhm of image
+        fwhm = np.median(cata_amp["fwhm_image"])
+        # load image
         img = fits.getdata(in_fits[a])
         img_amp[a, :, :] = img
+        # do background estimate for image, median+-sigma, and then to mag+-err
+        # do circle aper photometry on sex found stars, and make a new table to contain data
+
+        # using iraf find find objects in image, and then do aper
+        # generate a new table
+        # rotate catalog and merge into big table
+
+    # save merged table as new catalog
 
 
 

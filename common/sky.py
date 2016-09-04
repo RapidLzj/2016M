@@ -9,28 +9,39 @@
 import astropy.coordinates
 from astropy.time import Time
 import numpy as np
+from .info import info
 
 
-class position (object) :
+class position (info) :
     """ A simple class holding the ra, dec, and distance
     """
 
     def __init__ (self, ra, dec, dis) :
-        self.ra  = ra
-        self.dec = dec
-        self.dis = dis
+        info.__init__(self, "Position", ra=ra, dec=dec, dis=dis)
 
     def __repr__ (self) :
         return "{r:>10.6f} {d:>+10.6f} {s}".format(r=self.ra, d=self.dec, s=self.dis)
 
 
 def moon_pos (mjd) :
+    """ Moon position, call astropy
+    args:
+        mjd: mjd
+    returns:
+        position instance, with ra, dec, distance
+    """
     p = astropy.coordinates.get_moon(Time(mjd, format="mjd"))
     pd = position(p.ra.deg, p.dec.deg, p.distance.km)
     return pd
 
 
 def sun_pos (mjd) :
+    """ Sun position, call astropy
+    args:
+        mjd: mjd
+    returns:
+        position instance, with ra, dec, distance
+    """
     p = astropy.coordinates.get_sun(Time(mjd, format="mjd"))
     pd = position(p.ra.deg, p.dec.deg, p.distance.km)
     return pd
@@ -121,6 +132,13 @@ def day_of_year (yr, mn, dy) :
 
 
 def lst (mjd, lon) :
+    """ get local sidereal time for longitude at specidied mjd
+    args:
+        mjd: mjd
+        lon: longitude, in degrees
+    returns:
+        lst: in hours
+    """
     return Time(mjd, format="mjd").sidereal_time("mean", lon).hour
 
 
@@ -224,7 +242,7 @@ def hourangle (lst, ra) :
 
 def airmass (lat, lst, ra, dec) :
     """ Calculate airmass
-        Use simplified formular from old obs4, unknown source
+        Use simplified formula from old obs4, unknown source
     args:
         lat: latitude of site, in degrees
         lst: local sidereal time, in hours

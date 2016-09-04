@@ -8,9 +8,8 @@
 
 import numpy as np
 from astropy.io import fits
-from rm_os import rm_os
 from common import *
-from constant import const
+from .constant import const
 
 
 def header_fix (raw_fits) :
