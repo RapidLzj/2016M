@@ -16,7 +16,7 @@ import args
 
 
 if __name__ == "__main__" :
-    a = {"tel":None, "list":None, "bias":None, "flat":None,
+    a = {"tel":None, "list":None, "bias":None, "flat":None, "prefix":"",
          "base":"", "debug":5, "overwrite":False}
     alias = {"arg_01":"tel", "arg_02":"list", "arg_03":"bias", "arg_04":"flat"}
     a = args.arg_trans(sys.argv, a, alias=alias, silent=True)
