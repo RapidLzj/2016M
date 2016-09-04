@@ -55,8 +55,10 @@ def merge_flat ( flat_list, bias_file, out_flat_file, basedir="", overwrite=Fals
             # remove overscan and bias
             data_one = rm_os(hdulist[a + 1].data, log) - biashdu[a + 1].data
             # normalize
-            data_med = np.median(data_one)
-            data_cube[f, a] = data_one / data_med
+            #data_med = np.median(data_one)
+            data_cube[f, a] = data_one# / data_med
+        data_med = np.median(data_cube[f])
+        data_cube[f] /= data_med
         hdulist.close()
 
     # get median

@@ -54,13 +54,15 @@ Note:
         global debug
         debug = a["debug"]
         print ("Merge flat: "
-               "\tlist file  ={list}"
-               "\tbias       ={bias}"
-               "\tflat       ={flat}"
-               "\tbase dir   ={base}"
-               "\tdebug level={debug}".format(
-            list=a["prefix"]+a["list"], bias=a["prefix"]+a["bias"], flat=a["prefix"]+a["bias"],
+               "\n\tlist file  ={list}"
+               "\n\tbias       ={bias}"
+               "\n\tflat       ={flat}"
+               "\n\tbase dir   ={base}"
+               "\n\tdebug level={debug}"
+               "".format(
+            list=a["prefix"]+a["list"], bias=a["prefix"]+a["bias"], flat=a["prefix"]+a["flat"],
             base=a["base"], debug=debug))
-        tel.merge_flat(a["prefix"]+a["list"], a["prefix"]+a["bias"], a["base"], overwrite=a["overwrite"])
+        tel.merge_flat(a["prefix"]+a["list"], a["prefix"]+a["bias"], a["prefix"]+a["flat"],
+                       a["base"], overwrite=a["overwrite"])
 
 

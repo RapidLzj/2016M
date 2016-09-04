@@ -50,8 +50,14 @@ Note:
 
         global debug
         debug = a["debug"]
-        print ("Merge bias: \n\tlist file  ={list}\n\toutput bias={bias}\n\tbase dir   ={base}\n\tdebug level={debug}".format(
+        print ("Merge bias: "
+               "\n\tlist file  ={list}"
+               "\n\toutput bias={bias}"
+               "\n\tbase dir   ={base}"
+               "\n\tdebug level={debug}"
+               "".format(
             list=a["prefix"]+a["list"], bias=a["prefix"]+a["bias"], base=a["base"], debug=debug))
-        tel.merge_bias(a["prefix"]+a["list"], a["prefix"]+a["bias"], a["base"], overwrite=a["overwrite"])
+        tel.merge_bias(a["prefix"]+a["list"], a["prefix"]+a["bias"],
+                       a["base"], overwrite=a["overwrite"])
 
 
