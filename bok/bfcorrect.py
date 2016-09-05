@@ -63,8 +63,8 @@ def bfcorrect (raw_path, red_path, bare_fits, bias_file, flat_file,
 
     pri_hdu = fits.PrimaryHDU()
     for a in range(const.n_amp) :
-        data = np.float32((rm_os(raw_hdu[a + 1].data, log) - bias_hdu[a + 1].data) /
-                          flat_hdu[a + 1].data)
+        data = np.float32((rm_os(raw_hdu[a + 1].data, log) -
+                           bias_hdu[a + 1].data) / flat_hdu[a + 1].data)
         pri_hdu.data = data
         pri_hdu.header = raw_hdu[a + 1].header
         pri_hdu.header.extent(raw_hdu[0].header.cards)

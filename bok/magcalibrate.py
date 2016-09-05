@@ -14,7 +14,7 @@ from .constant import const
 
 
 def magcalibrate(red_path, bare_fits,
-                 mag_catalog="catalog/HM1998", match_mode=1, match_distan=0.002,
+                 mag_catalog="catalog/HM1998", match_mode=1, mag_match_distan=0.002,
                  ver_from=None, ver_to=None, overwrite=False):
     """ Magnitude calibrate.
     argument:
@@ -22,7 +22,7 @@ def magcalibrate(red_path, bare_fits,
         bare_fits: fits file without path and extension
         mag_catalog: use which magnitude catalog
         match_mode: mode of choose matched star, default 1 for auto, 0 for manual, 2 for all
-        match_distan: distance limit for matching, default 0.002 deg, 7.2 arcsec
+        mag_match_distan: distance limit for matching, default 0.002 deg, 7.2 arcsec
         ver_from: version which data come from
         ver_to: version which data write to
         overwrite: is set, overwrite existing output files

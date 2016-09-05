@@ -14,8 +14,10 @@
 from .rm_os import rm_os
 from .merge_bias import merge_bias
 from .merge_flat import merge_flat
+from .pipeline import pipeline
 from .bfcorrect import bfcorrect
 from .photometry import photomerey
 from .astrometry import astromerey
+from .magcalibrate import magcalibrate
 from .report import report
 
